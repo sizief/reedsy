@@ -20,10 +20,10 @@ class AuthorTest < Minitest::Test
     books_list = create_books_list
     assert_equal @author.books, books_list
   end
-  
+
   def create_books_list
     books = %w(Mountain Sea)
-    books_objects = Array.new
+    books_objects = []
     books.each do |book|
       b = Models::Book.new(title: book, author: @author)
       b.save
@@ -31,7 +31,7 @@ class AuthorTest < Minitest::Test
     end
     books_objects
   end
-  
+
   def teardown
     reset_object_record
   end

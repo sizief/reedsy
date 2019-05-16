@@ -1,9 +1,8 @@
-#A storage and query mechanisme for storing object states
-#Inherit from this class would be enough to be able to save objects
-#and fetch them later
-
 require_relative 'errors/object_record/model_error'
 
+# A storage for storing object states
+# Inherit from this class would be enough to be able to save objects
+# and fetch them later
 class ObjectRecord
   @store = {}
 
@@ -11,7 +10,7 @@ class ObjectRecord
     attr_reader :store
   end
 
-  # Returns array of objects that meets the condition
+  # Returns array of SELF objects that meets the condition
   def self.find_by(attribute, value)
     model = name.to_sym
     result = []
@@ -19,7 +18,7 @@ class ObjectRecord
       result << object if object.instance_variable_get("@#{attribute}".to_sym) == value
     end
     result
-  rescue StandardError=> e
+  rescue StandardError
     raise Errors::ObjectRecord::ModelError
   end
 
@@ -50,4 +49,4 @@ class ObjectRecord
   def initialize_model_record(model)
     ObjectRecord.store[model] = []
   end
-  end
+end

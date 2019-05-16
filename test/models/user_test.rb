@@ -15,19 +15,19 @@ class UserTest < Minitest::Test
     assert_equal Models::User.first.name, 'ali', Models::User.first.name
   end
 
-  def test_favourite_authors
+  def test_followee_authors
     authors_list = create_favourite_authors_list
-    assert_equal @user.favourite_authors, authors_list
+    assert_equal @user.followee_authors, authors_list
   end
 
-  def test_favourite_books
+  def test_upvoted_books
     books_list = create_favourite_books_list
-    assert_equal @user.favourite_books, books_list
+    assert_equal @user.upvoted_books, books_list
   end
-  
+
   def create_favourite_authors_list
     authers = %w(Gabriel Isaac)
-    authors_objects = Array.new
+    authors_objects = []
     authers.each do |author|
       a = Models::Author.new(name: author)
       a.save
@@ -37,10 +37,10 @@ class UserTest < Minitest::Test
     end
     authors_objects
   end
-  
+
   def create_favourite_books_list
     books = %w(Mountain Sea)
-    books_objects = Array.new
+    books_objects = []
     books.each do |book|
       b = Models::Book.new(title: book)
       b.save
@@ -50,7 +50,7 @@ class UserTest < Minitest::Test
     end
     books_objects
   end
-  
+
   def teardown
     reset_object_record
   end

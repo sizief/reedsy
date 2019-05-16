@@ -3,7 +3,7 @@ module Models
   # - name
   class Author < ::ObjectRecord
     attr_accessor :name
-    
+
     def initialize(args)
       @name = args[:name]
     end

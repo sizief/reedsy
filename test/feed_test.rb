@@ -11,7 +11,7 @@ class FeedTest < Minitest::Test
 
   def test_retrieve
     feed = @feed.retrieve
-    assert_equal feed, ['The man in a highr castle', 'Ubik', 'Master and Margarita',
+    assert_equal feed, ['The man in a high castle', 'Ubik', 'Master and Margarita',
                         'Foundation', 'I, Robot', 'The End of Eternity', 'Nightfall',
                         'Do android dream of electic sheeps?', 'A scanner darkly']
   end
@@ -36,7 +36,7 @@ class FeedTest < Minitest::Test
   end
 
   def create_upvotes
-    ['Master and Margarita', 'The man in a highr castle', 'Ubik'].each do |book|
+    ['Master and Margarita', 'The man in a high castle', 'Ubik'].each do |book|
       books = Models::Book.find_by :title, book
       upvote = Models::Upvote.new(book: books.first, user: @user)
       upvote.save
@@ -55,7 +55,7 @@ class FeedTest < Minitest::Test
       },
       {
         author: 'Philip K Dick',
-        books: ['Do android dream of electic sheeps?', 'A scanner darkly', 'The man in a highr castle', 'Ubik']
+        books: ['Do android dream of electic sheeps?', 'A scanner darkly', 'The man in a high castle', 'Ubik']
       },
       {
         author: 'Jorge Luis Borges',

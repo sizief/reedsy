@@ -1,33 +1,46 @@
+# Feed gathers data related to user and prepare a list of favourite books
 class Feed
-  def initialize args
+  def initialize(args)
     @user = args[:user]
   end
 
-  # It show a list of book titles that contains, in order:
-  # 1. Books that user upvotes and also follows the author of that book
-  # 2. Books that user upvotes
-  # 3. Books that wrote by authors which user is following
+  # Get list of book titles that meets two conditions:
+  # 1. Books that user upvotes
+  # 2. Books that wrote by authors which user is following
   def retrieve
-    followed_authors = user_favourite_authors
-    upvoted_books = user_favourite_books
+    authors = get_followee_authors
+    authors_books = get_authors_books authors
+    upvoted_books = get_upvoted_books
 
-    authors_books = Array.new
-    followed_authors.map{|author| authors_books << books_for(author) } 
-    feed_books = (user_favourite_books + authors_books).flatten.uniq
-    sort feed_books, user_authors, user_books
+    feed = merge authors_books, upvoted_books
+    feed.map(&:title)
   end
 
   private
 
-  def user_favourite_authors
-    @user.favourite_authors
+  # Merge the list in this order:
+  # 1. Books that upvoted AND also wrote by author which user is followed
+  # 2. Books upvotes
+  # 3. Books from author which user is followed
+  def merge(authors_books, upvoted_books)
+    res = ([upvoted_books & authors_books] + upvoted_books + authors_books)
+    res.flatten.uniq
   end
 
-  def user_favourite_books
-    @user.favourite_books
+  def get_authors_books(authors)
+    book_list = []
+    authors.map { |author| book_list << books_for(author) }.flatten
   end
 
-  def books_for author
+  def get_followee_authors
+    @user.followee_authors
+  end
+
+  def get_upvoted_books
+    @user.upvoted_books
+  end
+
+  def books_for(author)
     author.books
   end
 end
