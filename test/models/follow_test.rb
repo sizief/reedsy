@@ -14,4 +14,13 @@ class FollowTest < Minitest::Test
   def test_follow_author_name
     assert_equal @follow.author.name, @author.name
   end
+
+  def test_save
+    @follow.save
+    assert_equal Models::Follow.first.author.name, @author.name
+  end
+
+  def teardown
+    reset_object_record
+  end
 end

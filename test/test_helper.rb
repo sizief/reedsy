@@ -6,3 +6,11 @@ require_relative '../app.rb'
 require_relative '../lib/models'
 require_relative '../lib/feed'
 require_relative '../lib/object_record'
+
+def reset_object_record
+  Models::Author.delete_all
+  Models::User.delete_all
+  Models::Follow.delete_all
+  Models::Upvote.delete_all
+  Models::Book.delete_all
+end
