@@ -29,7 +29,7 @@ class FeedTest < Minitest::Test
 
   def create_follows
     ['Isaac Asimov', 'Philip K Dick'].each do |author|
-      authors = Models::Author.find_by :name, author
+      authors = Models::Author.find_by name: author
       follow = Models::Follow.new(author: authors.first, user: @user)
       follow.save
     end
@@ -37,7 +37,7 @@ class FeedTest < Minitest::Test
 
   def create_upvotes
     ['Master and Margarita', 'The man in a high castle', 'Ubik'].each do |book|
-      books = Models::Book.find_by :title, book
+      books = Models::Book.find_by title: book
       upvote = Models::Upvote.new(book: books.first, user: @user)
       upvote.save
     end

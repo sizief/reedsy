@@ -10,12 +10,12 @@ module Models
 
     # Returns list of Model::Author objects that user is followed
     def followee_authors
-      (Follow.find_by :user, self).map(&:author)
+      (Follow.find_by user: self).map(&:author)
     end
 
     # Returns list of Model::Book objects that user is upvoted
     def upvoted_books
-      (Upvote.find_by :user, self).map(&:book)
+      (Upvote.find_by user: self).map(&:book)
     end
   end
 end

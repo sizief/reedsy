@@ -11,15 +11,10 @@ class ObjectRecord
   end
 
   # Returns array of SELF objects that meets the condition
-  def self.find_by(attribute, value)
+  def self.find_by(conditions)
     model = name.to_sym
-    result = []
-    ObjectRecord.store[model].each do |object|
-      result << object if object.instance_variable_get("@#{attribute}".to_sym) == value
-    end
-    result
-  rescue StandardError
-    raise Errors::ObjectRecord::ModelError
+    raise Errors::ObjectRecord::ModelError if ObjectRecord.store[model].nil?
+    find model, conditions
   end
 
   # Returns list of all objects of caller's class
@@ -49,4 +44,15 @@ class ObjectRecord
   def initialize_model_record(model)
     ObjectRecord.store[model] = []
   end
+
+  def self.find(model, conditions)
+    result = []
+    attribute = conditions.keys.first
+    value = conditions.values.first
+    ObjectRecord.store[model].each do |object|
+      result << object if object.instance_variable_get("@#{attribute}") == value
+    end
+    result
+  end
+  private_class_method :find
 end

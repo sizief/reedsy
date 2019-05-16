@@ -9,7 +9,7 @@ module Models
     end
 
     def books
-      Book.find_by :author, self
+      Book.find_by author: self
     end
   end
 end

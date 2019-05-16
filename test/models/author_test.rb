@@ -12,8 +12,8 @@ class AuthorTest < Minitest::Test
 
   def test_save
     @author.save
-    assert Models::Author.find_by(:name, 'No name').empty?
-    assert !Models::Author.find_by(:name, @name).empty?
+    assert Models::Author.find_by(name: 'No name').empty?
+    assert !Models::Author.find_by(name: @name).empty?
   end
 
   def test_books

@@ -20,8 +20,8 @@ class ObjectRecordTest < Minitest::Test
   end
 
   def test_find_by
-    assert_equal MockModel.find_by(:name, 'Ali').first.name, 'Ali'
-    assert_equal MockModel.find_by(:name, 'None'), []
+    assert_equal MockModel.find_by(name: 'Ali', created_at: Time.now).first.name, 'Ali'
+    assert_equal MockModel.find_by(name: 'None'), []
   end
 
   def test_first
@@ -37,9 +37,15 @@ class ObjectRecordTest < Minitest::Test
     assert_equal MockModel.all, []
   end
 
-  def test_find_error
+  def test_find_by_error
     assert_raises Errors::ObjectRecord::ModelError do
-      ErrorCheckingModel.find_by :name, 'test'
+      ErrorCheckingModel.find_by name: 'test'
+    end
+  end
+
+  def test_find_error
+    assert_raises NoMethodError do
+      Models::Book.find Models::Book.class, title: 'test'
     end
   end
 
