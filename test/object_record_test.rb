@@ -1,4 +1,5 @@
 require 'test_helper'
+
 class MockModel < ObjectRecord
   attr_accessor :name, :family
   def initialize(name, family)
