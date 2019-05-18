@@ -1,10 +1,18 @@
+require 'logging'
 # Feed gathers data related to user and prepare a list of favourite books
 class Feed
+  include Logging
+  # Set this to creation date of first book.
+  # We can set it automatically by using config at start up.
+  FIRST_BOOK_CREATION_TIME = Time.now - 86_400 * 365
+
   def initialize(args)
     @user = args[:user]
+    @search_parameters = {}
+    set_search_parameters(created_at: (FIRST_BOOK_CREATION_TIME..Time.now))
   end
 
-  # Get list of book titles that meets two conditions:
+  # Get list of book titles (based on @search_parameters) that meets two conditions:
   # 1. Books that user upvotes
   # 2. Books that wrote by authors which user is following
   def retrieve
@@ -12,8 +20,16 @@ class Feed
     authors_books = get_authors_books authors
     upvoted_books = get_upvoted_books
 
+    logger.info "Starting generate feed for #{@user}"
     feed = merge authors_books, upvoted_books
+    @retrieved_time = Time.now
     feed.map(&:title)
+  end
+
+  def refresh
+    raise 'Call retrieve first' if @retrieved_time.nil?
+    set_search_parameters(created_at: (@retrieved_time..Time.now))
+    retrieve
   end
 
   private
@@ -27,20 +43,24 @@ class Feed
     res.flatten.uniq
   end
 
+  def set_search_parameters(search_args)
+    search_args.map { |parameter, value| @search_parameters[parameter] = value }
+  end
+
   def get_authors_books(authors)
     book_list = []
     authors.map { |author| book_list << books_for(author) }.flatten
   end
 
   def get_followee_authors
-    @user.followee_authors
+    @user.followee_authors @search_parameters
   end
 
   def get_upvoted_books
-    @user.upvoted_books
+    @user.upvoted_books @search_parameters
   end
 
   def books_for(author)
-    author.books
+    author.books @search_parameters
   end
 end

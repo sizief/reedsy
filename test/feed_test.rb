@@ -16,6 +16,17 @@ class FeedTest < Minitest::Test
                         'Do android dream of electic sheeps?', 'A scanner darkly']
   end
 
+  def test_refresh
+    feed = @feed.retrieve
+    author = Models::Author.find_by(name: 'Jorge Luis Borges').first
+    follow = Models::Follow.new user: @user, author: author
+    follow.save
+
+    sleep(3)
+    feed = @feed.refresh
+    assert_equal feed, ['Borges and I', 'The Library of Babel']
+  end
+
   def create_authors_books
     authors_books_list.each do |item|
       author = Models::Author.new(name: item[:author])

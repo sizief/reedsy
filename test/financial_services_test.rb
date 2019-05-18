@@ -11,7 +11,7 @@ class FinancialServicesTest < MiniTest::Test
 
   def test_error_gateway
     assert_raises do
-      payment = FinancialServices.new(payment_gateway: 'Unkown', amount: 42)
+      FinancialServices.new(payment_gateway: 'Unkown', amount: 42)
     end
   end
 end

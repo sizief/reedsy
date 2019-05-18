@@ -9,13 +9,15 @@ module Models
     end
 
     # Returns list of Model::Author objects that user is followed
-    def followee_authors
-      (Follow.find_by user: self).map(&:author)
+    def followee_authors(search_parameters = {})
+      search_parameters[:user] = self
+      (Follow.find_by search_parameters).map(&:author)
     end
 
     # Returns list of Model::Book objects that user is upvoted
-    def upvoted_books
-      (Upvote.find_by user: self).map(&:book)
+    def upvoted_books(search_parameters = {})
+      search_parameters[:user] = self
+      (Upvote.find_by search_parameters).map(&:book)
     end
   end
 end
