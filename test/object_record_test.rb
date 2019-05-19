@@ -8,7 +8,7 @@ class MockModel < ObjectRecord
   end
 end
 
-class ErrorCheckingModel < ObjectRecord; end
+class EmptyCheckingModel < ObjectRecord; end
 
 class ObjectRecordTest < Minitest::Test
   def setup
@@ -38,10 +38,8 @@ class ObjectRecordTest < Minitest::Test
     assert_equal MockModel.all, []
   end
 
-  def test_find_by_error
-    assert_raises Errors::ObjectRecord::ModelError do
-      ErrorCheckingModel.find_by name: 'test'
-    end
+  def test_find_by_empty_error
+    assert_equal EmptyCheckingModel.find_by(name: 'test'), []
   end
 
   def test_find_error

@@ -8,7 +8,7 @@ module Models
       @name = args[:name]
     end
 
-    def books(_search_parameters = nil)
+    def books
       Book.find_by author: self
     end
   end

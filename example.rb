@@ -1,33 +1,40 @@
 require_relative 'lib/models'
+require_relative 'lib/feed'
 
 # Create user
-u1 = Models::User.new(name: 'user u1')
-u1.save
+Models::User.new(name: 'user u1').save
+user_1 = Models::User.first
 
 # Create Author
-a1 = Models::Author.new(name: 'author a1')
-a1.save
+author_1 = Models::Author.new(name: 'author a1')
+author_1.save
 
-#Create Book
-b1 = Models::Book.new(title: 'book b1', author: a1)
-b1.save
+# Follow Author
+Models::Follow.new(author: author_1, user: user_1).save
 
-b2 = Models::Book.new(title: 'book b2', author: a1)
-b2.save
+# Create Book
+book_1 = Models::Book.new(title: 'book b1', author: author_1)
+book_1.save
+
+book_2 = Models::Book.new(title: 'book b2', author: author_1)
+book_2.save
 
 # Create Upvotes
-up1 = Models::Upvote.new(book: b1, user: u1)
-up1.save
-
-up2 = Models::Upvote.new(book: b2, user: u2)
-up2.save
+Models::Upvote.new(book: book_1, user: user_1).save
 
 # Find and retrieve models
-p Models::Upvote.all
-p Models::Upvote.find_by :user, u1
+# p Models::Upvote.all
 
-# run Feed
- feed = Feed.new(user: u1)
- p feed.retrieve
- #add some more books to upvote or follow new author
- p feed.refresh
+# Run Feed
+feed = Feed.new(user: user_1)
+p feed.retrieve #=> ["book b1", "book b2"]
+
+# Adding new author (Rumi, Iranian poet), adding one of his books, and following him
+new_author = Models::Author.new(name: 'Rumi')
+new_author.save
+Models::Book.new(title: 'The Essential', author: new_author).save
+Models::Follow.new(user: user_1, author: new_author).save
+
+sleep(2)
+# Refreshe feed
+p feed.refresh #=> ['The Essential']

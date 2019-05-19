@@ -1,9 +1,11 @@
-require 'logging'
+require_relative 'logging'
+require_relative 'errors/feed/refresh_error'
+
 # Feed gathers data related to user and prepare a list of favourite books
 class Feed
   include Logging
+
   # Set this to creation date of first book.
-  # We can set it automatically by using config at start up.
   FIRST_BOOK_CREATION_TIME = Time.now - 86_400 * 365
 
   def initialize(args)
@@ -20,14 +22,13 @@ class Feed
     authors_books = get_authors_books authors
     upvoted_books = get_upvoted_books
 
-    logger.info "Starting generate feed for #{@user}"
     feed = merge authors_books, upvoted_books
     @retrieved_time = Time.now
     feed.map(&:title)
   end
 
   def refresh
-    raise 'Call retrieve first' if @retrieved_time.nil?
+    raise Errors::Feed::RefreshError if @retrieved_time.nil?
     set_search_parameters(created_at: (@retrieved_time..Time.now))
     retrieve
   end
@@ -44,12 +45,12 @@ class Feed
   end
 
   def set_search_parameters(search_args)
+    @search_parameters = {}
     search_args.map { |parameter, value| @search_parameters[parameter] = value }
   end
 
   def get_authors_books(authors)
-    book_list = []
-    authors.map { |author| book_list << books_for(author) }.flatten
+    authors.map { |author| books_for(author) }.flatten
   end
 
   def get_followee_authors
@@ -61,6 +62,6 @@ class Feed
   end
 
   def books_for(author)
-    author.books @search_parameters
+    author.books
   end
 end

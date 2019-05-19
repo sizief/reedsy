@@ -1,8 +1,8 @@
-require_relative './errors/object_record/model_error'
 require_relative './logging'
 # A storage for storing object states
 # Inherit from this class would be enough to be able to save objects
 # and fetch them later
+
 class ObjectRecord
   extend Logging
   attr_accessor :created_at
@@ -15,7 +15,7 @@ class ObjectRecord
   # Returns array of SELF objects that meets the condition
   def self.find_by(conditions)
     model = name.to_sym
-    raise Errors::ObjectRecord::ModelError if ObjectRecord.store[model].nil?
+    return [] if ObjectRecord.store[model].nil?
     find model, conditions
   end
 
@@ -56,10 +56,9 @@ class ObjectRecord
     result
   end
 
-  private_class_method :find
   def self.are_conditions_true?(object, conditions)
     res = conditions.map do |attr, value|
-      next if object.instance_variable_get("@#{attr}").nil?
+      next unless object.respond_to? attr
       if value.is_a? Range
         object.instance_variable_get("@#{attr}") >= value.first &&
           object.instance_variable_get("@#{attr}") <= value.last
@@ -67,6 +66,8 @@ class ObjectRecord
         object.instance_variable_get("@#{attr}") == value
       end
     end
-    res.flatten.all? true
+    res.flatten.compact.all? true
   end
+
+  private_class_method :find
 end

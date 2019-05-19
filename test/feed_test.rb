@@ -18,11 +18,12 @@ class FeedTest < Minitest::Test
 
   def test_refresh
     @feed.retrieve
+    sleep(2)
     author = Models::Author.find_by(name: 'Jorge Luis Borges').first
     follow = Models::Follow.new user: @user, author: author
     follow.save
 
-    sleep(3)
+    sleep(2)
     feed = @feed.refresh
     assert_equal feed, ['Borges and I', 'The Library of Babel']
   end
