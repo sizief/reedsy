@@ -17,7 +17,7 @@ class FeedTest < Minitest::Test
   end
 
   def test_refresh
-    feed = @feed.retrieve
+    @feed.retrieve
     author = Models::Author.find_by(name: 'Jorge Luis Borges').first
     follow = Models::Follow.new user: @user, author: author
     follow.save

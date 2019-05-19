@@ -58,7 +58,6 @@ class ObjectRecord
 
   private_class_method :find
   def self.are_conditions_true?(object, conditions)
-    res = []
     res = conditions.map do |attr, value|
       next if object.instance_variable_get("@#{attr}").nil?
       if value.is_a? Range

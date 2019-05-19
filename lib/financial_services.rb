@@ -17,6 +17,7 @@ class FinancialServices
   end
 end
 
+# Factory to create gateways.
 class GatewayFactory
   def self.create(payment_gateway)
     case payment_gateway.downcase
@@ -30,18 +31,21 @@ class GatewayFactory
   end
 end
 
+# An interface for any gateway
 class PaymentGateway
   def pay(_amount)
     raise 'Should implement pay method!'
   end
 end
 
+# Implementing Payypal API
 class Paypal < PaymentGateway
   def pay(amount)
     "Paid #{amount} by Paypal"
   end
 end
 
+# Implementing Stripe API
 class Stripe < PaymentGateway
   def pay(amount)
     "Paid #{amount} by Stripe"
